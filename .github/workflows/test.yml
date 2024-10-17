@@ -1,12 +1,12 @@
 name: Test
 
 on:
-  push:
-    branches:
-      - "**" # Runs on push for all branches
   pull_request:
     branches:
       - "**" # Runs on all pull requests
+  push:
+    branches:
+      - main
   merge_group:
     types:
       - checks_requested
