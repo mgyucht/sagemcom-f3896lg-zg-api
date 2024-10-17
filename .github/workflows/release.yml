@@ -20,6 +20,16 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip  # Cache for pip
+            ~/.local/share/hatch/env/  # Cache for Hatch environments
+          key: ${{ runner.os }}-python-${{ hashFiles('**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-python-
+
       - name: Install Hatch
         run: |
           python -m pip install --upgrade pip
@@ -39,8 +49,8 @@ jobs:
         with:
           draft: true
           files: |
-            dist/databricks-*.whl
-            dist/dat
+            dist/*.whl
+            dist/*.tar.gz
 
       - uses: pypa/gh-action-pypi-publish@release/v1
         name: Publish package distributions to PyPI
