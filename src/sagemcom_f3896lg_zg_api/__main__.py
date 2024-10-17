@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 import asyncio
+import getpass
 import logging
 from .client import SagemcomF3896LGApi
 
@@ -10,7 +11,13 @@ logging.basicConfig(level=logging.DEBUG)
 
 # Main entry to run the async function
 async def main():
-    with SagemcomF3896LGApi(password=input('Enter router password:')) as api:
+    router_endpoint = input('Enter router IP: ')
+    if not router_endpoint:
+        print('No router specified, exiting')
+    password = getpass.getpass('Enter router password: ')
+    if not password:
+        print('No password specified, exiting')
+    async with SagemcomF3896LGApi(router_endpoint=router_endpoint, password=password) as api:
         if await api.login():
             print("Logged in! Fetching connected hosts...")
             hosts = await api.get_hosts()
