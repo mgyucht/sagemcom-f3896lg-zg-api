@@ -10,10 +10,30 @@
 - [Installation](#installation)
 - [License](#license)
 
+## Overview
+
+`sagemcom-f3896lg-zg-api` is a async Python client that interacts with the Sagemcom 
+
 ## Installation
 
 ```console
 pip install sagemcom-f3896lg-zg-api
+```
+
+## Example
+
+```py
+ROUTER_ENDPOINT = "192.168.100.1"
+PASSWORD = "..."
+async def main():
+    async with SagemcomF3896LGApi(router_endpoint=ROUTER_ENDPOINT, password=PASSWORD) as api:
+        if await api.login():
+            print("Logged in! Fetching connected hosts...")
+            hosts = await api.get_hosts()
+            for host in hosts.hosts.hosts:
+                print(host.model_dump_json(indent=4))
+        else:
+            print("Failed to login!")
 ```
 
 ## License

@@ -1,21 +1,24 @@
 from types import TracebackType
-from typing import Optional, Any, Type
+from typing import Optional, Any, Type, Coroutine, AsyncContextManager
 import aiohttp
 import aiohttp.typedefs
 import logging
 
-from .model import LoginResponseModel, NetworkHostsModel
+from .model import LoginResponseModel, NetworkHostsModel, TokenModel
 
 _LOGGER = logging.getLogger(__name__)
 
 API_BASE = "/rest/v1"
 
+class UnauthenticatedError(RuntimeError):
+    pass
+
 class SagemcomF3896LGApi:
     def __init__(self, password: str, router_endpoint: str) -> None:
         self._password = password
         self._router_endpoint = router_endpoint
-        self._session = None
-        self._token = None
+        self._session: Optional[aiohttp.ClientSession] = None
+        self._token: Optional[TokenModel] = None
 
     async def close(self):
         if self._session is not None:
@@ -32,9 +35,11 @@ class SagemcomF3896LGApi:
         exc_tb: Optional[TracebackType]) -> None:
         await self.close()
 
-    def _request(self, method: str, endpoint: str, params: aiohttp.typedefs.Query = None, json: Any = None, session: aiohttp.ClientSession = None) -> aiohttp.ClientResponse:
+    def _request(self, method: str, endpoint: str, params: aiohttp.typedefs.Query = None, json: Any = None, session: Optional[aiohttp.ClientSession] = None) -> aiohttp.client._RequestContextManager:
         if session is None:
             session = self._session
+        if session is None:
+            raise UnauthenticatedError("cannot make a request without authenticating or supplying a session")
         return session.request(method, f"http://{self._router_endpoint}{API_BASE}{endpoint}", params=params, json=json)
 
     async def login(self) -> bool:
@@ -62,6 +67,9 @@ class SagemcomF3896LGApi:
                 return None
 
     async def logout(self) -> bool:
+        if not self._token:
+            _LOGGER.warning('client not authenticated, skipping logout')
+            return True
         async with self._request('DELETE', f"/user/{self._token.userId}/token/{self._token.token}") as response:
             if response.status == 204:
                 return True
