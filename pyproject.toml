@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sagemcom-f3896lg-zg-api"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Miles Yucht", email = "mgyucht@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "aiohttp==3.10.10",
+  "pydantic==2.9.2",
+]
+
+[project.urls]
+Documentation = "https://github.com/mgyucht/sagemcom-f3896lg-zg-api#readme"
+Issues = "https://github.com/mgyucht/sagemcom-f3896lg-zg-api/issues"
+Source = "https://github.com/mgyucht/sagemcom-f3896lg-zg-api"
+
+[tool.hatch.version]
+path = "src/sagemcom_f3896lg_zg_api/__about__.py"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/sagemcom_f3896lg_zg_api tests}"
+
+[tool.coverage.run]
+source_pkgs = ["sagemcom_f3896lg_zg_api", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/sagemcom_f3896lg_zg_api/__about__.py",
+]
+
+[tool.coverage.paths]
+sagemcom_f3896lg_zg_api = ["src/sagemcom_f3896lg_zg_api", "*/sagemcom-f3896lg-zg-api/src/sagemcom_f3896lg_zg_api"]
+tests = ["tests", "*/sagemcom-f3896lg-zg-api/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
