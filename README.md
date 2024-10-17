@@ -3,7 +3,7 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/sagemcom-f3896lg-zg-api.svg)](https://pypi.org/project/sagemcom-f3896lg-zg-api)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/sagemcom-f3896lg-zg-api.svg)](https://pypi.org/project/sagemcom-f3896lg-zg-api)
 
------
+---
 
 ## Table of Contents
 
@@ -12,7 +12,13 @@
 
 ## Overview
 
-`sagemcom-f3896lg-zg-api` is a async Python client that interacts with the Sagemcom 
+`sagemcom-f3896lg-zg-api` is a async Python client that interacts with the Sagemcom F3896LG-ZG router.
+
+For now, the only supported operation is listing hosts on the network, which can be used for presence
+detection or monitoring your home network.
+
+This is inspired by https://github.com/iMicknl/python-sagemcom-api, but my version of this router does
+not support the FastCGI endpoints used by that library.
 
 ## Installation
 
